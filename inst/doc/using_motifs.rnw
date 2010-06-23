@@ -1,0 +1,16 @@
+\documentclass[a4paper]{article}
+
+\begin{document}
+\title{Using Motifs}
+\author{Cass Johnston}
+\maketitle
+
+\section{Loading JASPAR / TRANSFAC motifs}
+
+
+<<>>=
+
+@
+
+\end{document}
+
