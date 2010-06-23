@@ -1,0 +1,11 @@
+Package: motifieR
+version: 0.1-1
+Date: 2010-06-23
+Title: Classes and functions for creating, manipulating and using PSSMs in R
+Author: Cass Johnston <cassjohnston@gmail.com>
+Maintainer: Cass Johnston <cassjohnston@gmail.com>
+Depends: Biostrings
+Description:  Classes and functions for creating, manipulating and using PSSMs in R
+License: GPL (>=3)
+URL: 
+BugReports: 
