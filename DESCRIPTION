@@ -7,5 +7,5 @@ Maintainer: Cass Johnston <cassjohnston@gmail.com>
 Depends: Biostrings
 Description:  Classes and functions for creating, manipulating and using PSSMs in R
 License: GPL (>=3)
-URL: 
-BugReports: 
+URL: http://github.com/cassj/motifieR 
+BugReports: http://cassjohnston.lighthouseapp.com/projects/54955-motifier/tickets/new 
