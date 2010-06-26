@@ -161,3 +161,10 @@ setMethod("plot",
                 seqLogo(motif.data(ppm(.Object)), ic.scale=ic.scale)
 })
 
+setMethod ("[", signature(x="motif", i="numeric", j="missing"),
+           function(x,i){
+             pfm <- pfm(x)[i]
+             return(new("motif",pfm=pfm))
+})
+
+

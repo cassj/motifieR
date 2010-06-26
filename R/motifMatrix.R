@@ -83,4 +83,11 @@ setMethod("bg",
             .Object@background
           })
 
+setMethod ("[", signature(x="motifMatrix", i="numeric", j="missing"), 
+           function(x,i){
+             motif.data <- x@motif.data[,i]
+             return(new(class(x), motif.data=motif.data))
+})
+
+
 
