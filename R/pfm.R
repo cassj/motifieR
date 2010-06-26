@@ -7,19 +7,22 @@ setClass("pfm",
            pseudocount = "numeric"
            ))
 setMethod("initialize","pfm",
-          function(.Object,data, pseudocount=0, add.pseudocount=TRUE, ...){
+          function(.Object,motif.data, pseudocount=0, add.pseudocount=TRUE, ...){
             if(add.pseudocount)
-              data <- data + (pseudocount/nrow(data))
-            callNextMethod(.Object, data, ...)
+              motif.data <- motif.data + (pseudocount/nrow(motif.data))
+              if(any(motif.data==0)){
+                 warning("Matrix contains counts of zero. Consider using a pseudocount.")
+               }
+            callNextMethod(.Object, motif.data, ...)
           }
           )
 
 setGeneric("pseudocount",
            function(.Object) standardGeneric("pseudocount"))
 setMethod("pseudocount",
-          signature=signature("motifMatrix"),
+          signature=signature("pfm"),
           function(.Object) {
-            .Object@data
+            .Object@pseudocount
           })
 
 

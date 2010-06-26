@@ -1,4 +1,4 @@
 importFrom(graphics, plot)
 exportClasses(motifMatrix, motif, pfm, ppm, pwm, JASPAR)
-exportMethods(data, alphabet, background, bg, pfm, ppm, pwm, ic, max.ic, pseudocount)
+exportMethods(motif.data, motif.alphabet, background, bg, pfm, ppm, pwm, ic, max.ic, pseudocount, getMatrixById, getMatrixByName, getAllMatrices, getMetadataFromID)
 

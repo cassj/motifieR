@@ -4,10 +4,10 @@
 setClass("ppm",
          contains=c("motifMatrix"))
 setMethod("initialize","ppm",
-          function(.Object, data, ...) {
-            if(! all(apply(data,2,sum)==1))
+          function(.Object, motif.data, ...) {
+            if(! all(apply(motif.data,2,sum)==1))
               stop("All columns in a ppm must sum to 1")
-            callNextMethod(.Object, data, ...)
+            callNextMethod(.Object, motif.data, ...)
           }
           )
 

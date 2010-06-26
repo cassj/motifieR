@@ -13,7 +13,7 @@ setClass("motif",
            ppm = "ppmOrNULL",
            pwm = "pwmOrNULL",
            ic = "numericOrNULL",
-           alphabet="characterOrNULL"
+           motif.alphabet="characterOrNULL"
            )
          )
 
@@ -26,14 +26,14 @@ setMethod("initialize","motif",
             
             if(!is.null(.Object@pfm)){ #got a pfm
               if(!is.null(.Object@ppm)){ #also got a ppm?
-                if(! (all(alphabet(pfm) %in% alphabet(ppm)) && all(alphabet(ppm) %in% alphabet(pfm) )))
+                if(! (all(motif.alphabet(pfm) %in% motif.alphabet(ppm)) && all(motif.alphabet(ppm) %in% motif.alphabet(pfm) )))
                   stop("mismatching alphabets in supplied pfm and ppm")
                 warning("Using supplied pfm and ppm. Might be better to provide only pfm, from which ppm can be derived.")
-                .Object@alphabet <- alphabet(pfm)
+                .Object@motif.alphabet <- motif.alphabet(pfm)
               }
             }else{ 
               if(!is.null(.Object@ppm)){ #just got a ppm
-                .Object@alphabet <- alphabet(ppm)
+                .Object@motif.alphabet <- motif.alphabet(ppm)
               } else{
                 stop("Please provide either a pfm or pwm object") 
               }
@@ -49,7 +49,7 @@ setGeneric(".ppm<-",
 setReplaceMethod(".ppm",
                  signature=signature("motif", "ppm"),
                  function(.Object,value) {
-                     if(!is.null(alphabet(.Object))){
+                     if(!is.null(motif.alphabet(.Object))){
 
                      }
                      .Object@ppm <- value
@@ -79,11 +79,11 @@ setReplaceMethod(".ic",
 #getters
 
 
-setGeneric("alphabet",
-           function(.Object) standardGeneric("alphabet"))
-setMethod('alphabet',
+setGeneric("motif.alphabet",
+           function(.Object) standardGeneric("motif.alphabet"))
+setMethod('motif.alphabet',
           signature=signature(.Object="motif"),
-          function(.Object){.Object@alphabet}
+          function(.Object){.Object@motif.alphabet}
 )
 
 setGeneric("pfm",
@@ -102,8 +102,8 @@ setMethod('ppm',
               return(.Object@ppm)
             if(is.null(.Object@pfm))
               return(NULL)
-            data <- apply(.Object@pfm@data, 2, function(x){x/sum(x)})
-           .ppm(.Object)<-new("ppm", data=data, background=bg(pfm(.Object))) 
+            motif.data <- apply(.Object@pfm@motif.data, 2, function(x){x/sum(x)})
+           .ppm(.Object)<-new("ppm", motif.data=motif.data, background=bg(pfm(.Object))) 
             return(ppm(.Object))
           })
 
@@ -117,8 +117,8 @@ setMethod('pwm',
               return(.Object@pwm)
             if(is.null(ppm(.Object)))
               return(NULL)
-            data <- log2(data(ppm(.Object))/bg(ppm(.Object)))
-            .pwm(.Object)<-new("pwm", data=data, background=bg(ppm(.Object)))
+            motif.data <- log2(motif.data(ppm(.Object))/bg(ppm(.Object)))
+            .pwm(.Object)<-new("pwm", motif.data=motif.data, background=bg(ppm(.Object)))
             return(pwm(.Object))
           })
 
@@ -134,9 +134,9 @@ setMethod('ic',
               return(.Object@ic)
             if(is.null(ppm(.Object)))
               return(NULL)
-            data <- data(ppm(.Object)) * data(pwm(.Object))
-            data <- apply(data,2,sum)
-            .ic(.Object)<-data
+            motif.data <- motif.data(ppm(.Object)) * motif.data(pwm(.Object))
+            motif.data <- apply(motif.data,2,sum)
+            .ic(.Object)<-motif.data
             return(ic(.Object))
           })
 
@@ -147,9 +147,17 @@ setGeneric("max.ic",
 setMethod("max.ic",
           signature=signature(.Object="motif"),
           function(.Object){
-            return(log2(length(alphabet(.Object))))
+            return(log2(length(motif.alphabet(.Object))))
           }
           )
 
-        
+
+
+setGeneric("plot",
+          function(.Object, ic.scale=TRUE) standardGeneric("plot"))
+setMethod("plot",
+          signature=signature(.Object="motif"),
+          function(.Object, ic.scale=T){
+                seqLogo(motif.data(ppm(.Object)), ic.scale=ic.scale)
+})
 
