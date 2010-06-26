@@ -4,7 +4,7 @@ Date: 2010-06-23
 Title: Classes and functions for creating, manipulating and using PSSMs in R
 Author: Cass Johnston <cassjohnston@gmail.com>
 Maintainer: Cass Johnston <cassjohnston@gmail.com>
-Depends: Biostrings
+Depends: Biostrings, SSOAP
 Description:  Classes and functions for creating, manipulating and using PSSMs in R
 License: Artistic-2.0
 URL: http://github.com/cassj/motifieR 

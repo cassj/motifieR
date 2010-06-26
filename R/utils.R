@@ -1,6 +1,8 @@
 ####
-# Utilities
+# Utility Functions
 ####
+
+
 
 #this should generate a motif
 #read transfac formatted pfms (jaspar are same format)

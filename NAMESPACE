@@ -1,5 +1,4 @@
 importFrom(graphics, plot)
-export(read.transfac, read.jaspar )
-exportClasses(motifMatrix, motif, pfm, ppm, pwm)
+exportClasses(motifMatrix, motif, pfm, ppm, pwm, JASPAR)
 exportMethods(data, alphabet, background, bg, pfm, ppm, pwm, ic, max.ic, pseudocount)
 

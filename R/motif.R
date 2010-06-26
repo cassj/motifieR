@@ -102,9 +102,8 @@ setMethod('ppm',
               return(.Object@ppm)
             if(is.null(.Object@pfm))
               return(NULL)
-            data <- prop.table(.Object@pfm@data, margin=2)
-            .ppm(.Object) <- new("ppm", data=data)
-            
+            data <- apply(.Object@pfm@data, 2, function(x){x/sum(x)})
+           .ppm(.Object)<-new("ppm", data=data, background=bg(pfm(.Object))) 
             return(ppm(.Object))
           })
 
