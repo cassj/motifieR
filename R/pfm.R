@@ -8,6 +8,7 @@ setClass("pfm",
            ))
 setMethod("initialize","pfm",
           function(.Object,motif.data, pseudocount=0, add.pseudocount=TRUE, ...){
+            .Object@pseudocount=pseudocount
             if(add.pseudocount)
               motif.data <- motif.data + (pseudocount/nrow(motif.data))
               if(any(motif.data==0)){
