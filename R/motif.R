@@ -4,8 +4,6 @@
 setClassUnion("pfmOrNULL",c("pfm","NULL"))
 setClassUnion("ppmOrNULL",c("ppm","NULL"))
 setClassUnion("pwmOrNULL",c("pwm","NULL"))
-setClassUnion("numericOrNULL",c("numeric","NULL"))
-setClassUnion("characterOrNULL",c("character","NULL"))
 
 setClass("motif",
          representation=representation(
@@ -13,16 +11,24 @@ setClass("motif",
            ppm = "ppmOrNULL",
            pwm = "pwmOrNULL",
            ic = "numericOrNULL",
-           motif.alphabet="characterOrNULL"
+           motif.alphabet="characterOrNULL",
+           motif.name ="characterOrNULL",
+           motif.identifier="characterOrNULL",
+           motif.source="characterOrNULL",
+           motif.notes="characterOrNULL"
            )
          )
 
 
 setMethod("initialize","motif",
-          function(.Object, pfm=NULL, ppm=NULL){
+          function(.Object, pfm=NULL, ppm=NULL, motif.name=NULL, motif.identifier=NULL, motif.source=NULL, motif.notes=NULL ){
             
             .Object@pfm <- pfm
             .Object@ppm <- ppm
+            .Object@motif.name <- motif.name
+            .Object@motif.identifier <- motif.identifier
+            .Object@motif.source <- motif.source
+            .Object@motif.notes <- motif.notes
             
             if(!is.null(.Object@pfm)){ #got a pfm
               if(!is.null(.Object@ppm)){ #also got a ppm?
@@ -76,11 +82,53 @@ setReplaceMethod(".ic",
                  })
 
 
+#setters
+
+setGeneric("motif.name<-",
+           function(.Object, value) standardGeneric("motif.name<-"))
+setReplaceMethod("motif.name",
+                 signature=signature("motif", "character"),
+                 function(.Object,value) {
+                     .Object@motif.name <- value
+                     .Object
+                 })
+
+setGeneric("motif.identifier<-",
+           function(.Object, value) standardGeneric("motif.identifier<-"))
+setReplaceMethod("motif.identifier",
+                 signature=signature("motif", "character"),
+                 function(.Object,value) {
+                     .Object@motif.identifier <- value
+                     .Object
+                 })
+
+
+setGeneric("motif.source<-",
+           function(.Object, value) standardGeneric("motif.source<-"))
+setReplaceMethod("motif.source",
+                 signature=signature("motif", "character"),
+                 function(.Object,value) {
+                     .Object@motif.source <- value
+                     .Object
+                 })
+
+setGeneric("motif.notes<-",
+           function(.Object, value) standardGeneric("motif.notes<-"))
+setReplaceMethod("motif.notes",
+                 signature=signature("motif", "character"),
+                 function(.Object,value) {
+                     .Object@motif.notes <- value
+                     .Object
+                 })
+
+
+
 #getters
 
 
-setGeneric("motif.alphabet",
-           function(.Object) standardGeneric("motif.alphabet"))
+#careful, this has already been defined in previous classes
+#setGeneric("motif.alphabet",
+#           function(.Object) standardGeneric("motif.alphabet"))
 setMethod('motif.alphabet',
           signature=signature(.Object="motif"),
           function(.Object){.Object@motif.alphabet}
@@ -140,6 +188,46 @@ setMethod('ic',
             return(ic(.Object))
           })
 
+
+
+setGeneric("motif.name",
+           function(.Object) standardGeneric("motif.name"))
+setMethod('motif.name',
+          signature=signature(.Object="motif"),
+          function(.Object){
+            .Object@motif.name
+          })
+
+
+setGeneric("motif.identifier",
+           function(.Object) standardGeneric("motif.identifier"))
+setMethod('motif.identifier',
+          signature=signature(.Object="motif"),
+          function(.Object){
+            .Object@motif.identifier
+          })
+
+
+
+setGeneric("motif.source",
+           function(.Object) standardGeneric("motif.source"))
+setMethod('motif.source',
+          signature=signature(.Object="motif"),
+          function(.Object){
+            .Object@motif.source
+          })
+
+
+setGeneric("motif.notes",
+           function(.Object) standardGeneric("motif.notes"))
+setMethod('motif.notes',
+          signature=signature(.Object="motif"),
+          function(.Object){
+            .Object@motif.notes
+          })
+
+
+#Other stuff
 
 setGeneric("max.ic",
           function(.Object) standardGeneric("max.ic"))

@@ -1,11 +1,17 @@
-
 #Virtual class for all matrix representations of motifs
+
+setClassUnion("numericOrNULL",c("numeric","NULL"))
+setClassUnion("characterOrNULL",c("character","NULL"))
+
 setClass("motifMatrix",
          representation=representation(
            "VIRTUAL",
            motif.data="matrix",
            motif.alphabet="character",
-           background="numeric"
+           background="numeric",
+           motif.identifier="characterOrNULL",
+           motif.name="characterOrNULL",
+           notes="characterOrNULL"
            )
          )
 
@@ -51,6 +57,7 @@ setMethod("initialize","motifMatrix", function(.Object, motif.data, motif.alphab
 
 
 #getters
+
 setGeneric("motif.data",
            function(.Object) standardGeneric("motif.data"))
 setMethod("motif.data",
@@ -88,6 +95,7 @@ setMethod ("[", signature(x="motifMatrix", i="numeric", j="missing"),
              motif.data <- x@motif.data[,i]
              return(new(class(x), motif.data=motif.data))
 })
+
 
 
 

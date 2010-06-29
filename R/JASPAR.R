@@ -47,6 +47,15 @@ setMethod("initialize","JASPAR", function(.Object){
 #getMatrixByName, getAllMatrices, searchByTag
 
 
+prepare.meta <- function(meta){
+     nms <- colnames(meta)
+     meta <- as.character(meta)
+     names(meta) <- gsub('\\s*',"",nms)
+     meta <- gsub('\\s*',"",meta)
+     meta <- c(meta, date=date())
+     meta
+}
+
 setGeneric("getMatrixById", function(.Object, ID, pseudocount=0) standardGeneric("getMatrixById"))
 setMethod("getMatrixById",
           signature=signature("JASPAR"),
@@ -55,7 +64,9 @@ setMethod("getMatrixById",
              pfm <- as.matrix(read.table(file))
    	     rownames(pfm) <- c('A', 'C', 'G', 'T')
              pfm <- new("pfm",motif.data=pfm, pseudocount=pseudocount)
-             return(new("motif",pfm=pfm))
+             meta =.Object@.metadata[which(.Object@.metadata$ID==ID),]
+             meta <- prepare.meta(meta)             
+             mo <- new("motif",pfm=pfm, motif.identifier=meta["ID"], motif.name=meta["Name"], motif.source=paste("JASPAR"), motif.notes=meta)
           })
 
 
@@ -63,7 +74,7 @@ setGeneric("getMatrixByName", function(.Object, Name, pseudocount=0) standardGen
 setMethod("getMatrixByName",
           signature=signature("JASPAR"),
           function(.Object, Name, pseudocount=0) {
-             ID<-.Object@.metadata[which(.Object@.metadata[,"Name"]==name),"ID"] 
+             ID<-.Object@.metadata[which(.Object@.metadata[,"Name"]==name),"ID"]
              getMatrixById(.Object, ID=ID, pseudocount=pseudocount)
 })
 

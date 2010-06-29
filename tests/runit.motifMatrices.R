@@ -79,7 +79,7 @@ test.pfm<-function(){
   checkEquals(pseudocount(this),0)
   this<-new(className, motif.data=dat, pseudocount=1)
   checkEquals(pseudocount(this),1)
-  checkEquals(as.numeric(motif.data(this)),as.numeric(dat+.25)) 
+  checkEquals(as.numeric(motif.data(this)),as.numeric(dat+.25))
 }
 
 source("R/ppm.R")
@@ -89,7 +89,6 @@ test.ppm<-function(){
   rownames(dat)<-c("A","B","C","D")     
   this<-new(className, motif.data=dat)
   checkTrue(is(this, className))
- 
   dat<-cbind(c(.25,.25,.25,.32),c(.43,.25,.25,.25))
   checkException(new(className, motif.data=dat), "All columns in a ppm must sum to 1")  
 
