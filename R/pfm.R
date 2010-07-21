@@ -18,8 +18,6 @@ setMethod("initialize","pfm",
           }
           )
 
-setGeneric("pseudocount",
-           function(.Object) standardGeneric("pseudocount"))
 setMethod("pseudocount",
           signature=signature("pfm"),
           function(.Object) {

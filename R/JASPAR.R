@@ -74,7 +74,7 @@ setGeneric("getMatrixByName", function(.Object, Name, pseudocount=0) standardGen
 setMethod("getMatrixByName",
           signature=signature("JASPAR"),
           function(.Object, Name, pseudocount=0) {
-             ID<-.Object@.metadata[which(.Object@.metadata[,"Name"]==name),"ID"]
+             ID<-.Object@.metadata[which(.Object@.metadata[,"Name"]==Name),"ID"]
              getMatrixById(.Object, ID=ID, pseudocount=pseudocount)
 })
 

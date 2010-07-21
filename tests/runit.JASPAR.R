@@ -1,13 +1,5 @@
 checkTrue(require(methods))
 
-#load required classes
-source("R/motifMatrix.R")
-source("R/pfm.R")
-source("R/ppm.R")
-source("R/pwm.R")
-source("R/motif.R")
-source("R/JASPAR.R")
-
 #test the virtual class motifMatrix 
 test.JASPAR<-function(){
   className="JASPAR"

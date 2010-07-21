@@ -10,5 +10,4 @@ License: Artistic-2.0
 URL: http://github.com/cassj/motifieR 
 BugReports: http://cassjohnston.lighthouseapp.com/projects/54955/home 
 LazyLoad: true
-Collate: motifMatrix.R pfm.R ppm.R pwm.R motif.R JASPAR.R utils.R
- 
+Collate: generics.R motifMatrix.R pfm.R ppm.R pwm.R motif.R JASPAR.R 

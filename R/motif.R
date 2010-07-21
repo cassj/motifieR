@@ -1,5 +1,3 @@
-
-
 #A motif. With multiple representations
 setClassUnion("pfmOrNULL",c("pfm","NULL"))
 setClassUnion("ppmOrNULL",c("ppm","NULL"))
@@ -11,17 +9,57 @@ setClass("motif",
            ppm = "ppmOrNULL",
            pwm = "pwmOrNULL",
            ic = "numericOrNULL",
-           motif.alphabet="characterOrNULL",
+           motif.sequences="XStringSetOrNull"
            motif.name ="characterOrNULL",
            motif.identifier="characterOrNULL",
            motif.source="characterOrNULL",
-           motif.notes="characterOrNULL"
+           motif.notes="characterOrNULL",
+           background="numericOrNULL",
+           background.sequences="XStringSetOrNull",
+           alphabet = "characterOrNULL",
+           type="characterOrNULL"
            )
          )
 
 
 setMethod("initialize","motif",
-          function(.Object, pfm=NULL, ppm=NULL, motif.name=NULL, motif.identifier=NULL, motif.source=NULL, motif.notes=NULL ){
+          function(.Object, pfm=NULL, ppm=NULL, motif.sequences=NULL, motif.name=NULL, motif.identifier=NULL, motif.source=NULL, motif.notes=NULL, background.sequences=NULL, background=NULL, alphabet=NULL, type=NULL){
+
+            ##
+            # init alphabet
+            
+            if(! type %in% c("DNA","RNA", "AA")) stop("invalid type. Must be one of DNA, RNA, AA") 
+            .Object@type = type
+            .Object@alphabet = switch(type,
+              DNA = DNA_ALPHABET,
+              RNA = RNA_ALPHABET,
+              AA = AA_ALPHABET)
+
+            
+            ##       
+            # init Background
+            
+            #if we have background sequences, use those to calculate bg probs
+            if(!is.null(background.sequences)){
+              if(!is.null(background)){warning("background sequences provided, over-writing provided background freqs with calculated values")}
+              .Object@background <- alphabetFrequency(.Object@background.sequences, collapse=T, as.prob=T)
+            }else{
+              #if not, use given background probs, or equal probs
+              if(is.null(background)){
+                .Object@background <- switch(type,
+                                             DNA = c(rep(0.25,4), rep(0,length(DNA_ALPHABET)-4)),
+                                             RNA = c(rep(0.25,4), rep(0,length(RNA_ALPHABET)-4)),
+                                             AA = c(rep(0.25,20), rep(0,length(AA_ALPHABET)-20)))
+              }else{
+                .Object@background <- background
+              }
+             
+            }
+ 
+
+
+            ###
+            # init Motif
             
             .Object@pfm <- pfm
             .Object@ppm <- ppm
@@ -29,19 +67,25 @@ setMethod("initialize","motif",
             .Object@motif.identifier <- motif.identifier
             .Object@motif.source <- motif.source
             .Object@motif.notes <- motif.notes
+
             
             if(!is.null(.Object@pfm)){ #got a pfm
               if(!is.null(.Object@ppm)){ #also got a ppm?
-                if(! (all(motif.alphabet(pfm) %in% motif.alphabet(ppm)) && all(motif.alphabet(ppm) %in% motif.alphabet(pfm) )))
-                  stop("mismatching alphabets in supplied pfm and ppm")
-                warning("Using supplied pfm and ppm. Might be better to provide only pfm, from which ppm can be derived.")
-                .Object@motif.alphabet <- motif.alphabet(pfm)
+                stop("If you have a pfm, don't don't define ppm, it will be calculated from the ppm")
+              }else{
+                #check alphabets match
+                if(is.null(.Object@alphabet) ){
+                  .Object@alphabet <- alphabet(pwm)
+                }
               }
             }else{ 
               if(!is.null(.Object@ppm)){ #just got a ppm
-                .Object@motif.alphabet <- motif.alphabet(ppm)
+                if(is.null(.Object@alphabet) ){
+                  .Object@alphabet <- alphabet(ppm)
+                }
+
               } else{
-                stop("Please provide either a pfm or pwm object") 
+                stop("Please provide either a pfm or pwm object or a set of motif sequences") 
               }
             }
             .Object
@@ -50,8 +94,6 @@ setMethod("initialize","motif",
 
 #setters - not for public consumption
 
-setGeneric(".ppm<-",
-           function(.Object, value) standardGeneric(".ppm<-"))
 setReplaceMethod(".ppm",
                  signature=signature("motif", "ppm"),
                  function(.Object,value) {
@@ -63,8 +105,6 @@ setReplaceMethod(".ppm",
                  })
 
 
-setGeneric(".pwm<-",
-           function(.Object, value) standardGeneric(".pwm<-"))
 setReplaceMethod(".pwm",
                  signature=signature("motif", "pwm"),
                  function(.Object,value) {
@@ -72,8 +112,6 @@ setReplaceMethod(".pwm",
                      .Object
                  })
 
-setGeneric(".ic<-",
-           function(.Object, value) standardGeneric(".ic<-"))
 setReplaceMethod(".ic",
                  signature=signature("motif", "numeric"),
                  function(.Object,value) {
@@ -83,9 +121,6 @@ setReplaceMethod(".ic",
 
 
 #setters
-
-setGeneric("motif.name<-",
-           function(.Object, value) standardGeneric("motif.name<-"))
 setReplaceMethod("motif.name",
                  signature=signature("motif", "character"),
                  function(.Object,value) {
@@ -93,8 +128,6 @@ setReplaceMethod("motif.name",
                      .Object
                  })
 
-setGeneric("motif.identifier<-",
-           function(.Object, value) standardGeneric("motif.identifier<-"))
 setReplaceMethod("motif.identifier",
                  signature=signature("motif", "character"),
                  function(.Object,value) {
@@ -102,9 +135,6 @@ setReplaceMethod("motif.identifier",
                      .Object
                  })
 
-
-setGeneric("motif.source<-",
-           function(.Object, value) standardGeneric("motif.source<-"))
 setReplaceMethod("motif.source",
                  signature=signature("motif", "character"),
                  function(.Object,value) {
@@ -112,8 +142,6 @@ setReplaceMethod("motif.source",
                      .Object
                  })
 
-setGeneric("motif.notes<-",
-           function(.Object, value) standardGeneric("motif.notes<-"))
 setReplaceMethod("motif.notes",
                  signature=signature("motif", "character"),
                  function(.Object,value) {
@@ -125,24 +153,16 @@ setReplaceMethod("motif.notes",
 
 #getters
 
-
-#careful, this has already been defined in previous classes
-#setGeneric("motif.alphabet",
-#           function(.Object) standardGeneric("motif.alphabet"))
 setMethod('motif.alphabet',
           signature=signature(.Object="motif"),
           function(.Object){.Object@motif.alphabet}
 )
 
-setGeneric("pfm",
-           function(.Object) standardGeneric("pfm"))
 setMethod('pfm',
           signature=signature(.Object="motif"),
           function(.Object){.Object@pfm}
 )
 
-setGeneric("ppm",
-           function(.Object) standardGeneric("ppm"))
 setMethod('ppm',
           signature=signature(.Object="motif"),
           function(.Object){
@@ -156,8 +176,6 @@ setMethod('ppm',
           })
 
 
-setGeneric("pwm",
-           function(.Object) standardGeneric("pwm"))
 setMethod('pwm',
           signature=signature(.Object="motif"),
           function(.Object){
@@ -173,8 +191,6 @@ setMethod('pwm',
 
 
 
-setGeneric("ic",
-           function(.Object) standardGeneric("ic"))
 setMethod('ic',
           signature=signature(.Object="motif"),
           function(.Object){
@@ -190,8 +206,6 @@ setMethod('ic',
 
 
 
-setGeneric("motif.name",
-           function(.Object) standardGeneric("motif.name"))
 setMethod('motif.name',
           signature=signature(.Object="motif"),
           function(.Object){
@@ -199,8 +213,6 @@ setMethod('motif.name',
           })
 
 
-setGeneric("motif.identifier",
-           function(.Object) standardGeneric("motif.identifier"))
 setMethod('motif.identifier',
           signature=signature(.Object="motif"),
           function(.Object){
@@ -208,9 +220,6 @@ setMethod('motif.identifier',
           })
 
 
-
-setGeneric("motif.source",
-           function(.Object) standardGeneric("motif.source"))
 setMethod('motif.source',
           signature=signature(.Object="motif"),
           function(.Object){
@@ -218,8 +227,6 @@ setMethod('motif.source',
           })
 
 
-setGeneric("motif.notes",
-           function(.Object) standardGeneric("motif.notes"))
 setMethod('motif.notes',
           signature=signature(.Object="motif"),
           function(.Object){
@@ -228,10 +235,6 @@ setMethod('motif.notes',
 
 
 #Other stuff
-
-setGeneric("max.ic",
-          function(.Object) standardGeneric("max.ic"))
-
 setMethod("max.ic",
           signature=signature(.Object="motif"),
           function(.Object){
@@ -239,13 +242,9 @@ setMethod("max.ic",
           }
           )
 
-
-
-setGeneric("plot",
-          function(.Object, ic.scale=TRUE) standardGeneric("plot"))
-setMethod("plot",
-          signature=signature(.Object="motif"),
-          function(.Object, ic.scale=T){
+setMethod("logo",
+          signature=signature(.Object="motif", "logical"),
+          function(.Object, ic.scale=TRUE){
                 seqLogo(motif.data(ppm(.Object)), ic.scale=ic.scale)
 })
 

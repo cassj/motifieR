@@ -1,4 +1,5 @@
 importFrom(graphics, plot)
+importClassesFrom(Biostrings, XStringSet, BStringSet, DNAStringSet, RNAStringSet, AAStringSet, PhredQuality, SolexaQuality, XStringQuality,QualityScaledXStringSet,  QualityScaledBStringSet, QualityScaledDNAStringSet, QualityScaledRNAStringSet, QualityScaledAAStringSet)
 exportClasses(motifMatrix, motif, pfm, ppm, pwm, JASPAR)
 exportMethods(motif.data, motif.alphabet, background, bg, pfm, ppm, pwm, ic, max.ic, pseudocount, getMatrixById, getMatrixByName, getAllMatrices, getMetadataFromID)
 

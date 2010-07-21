@@ -57,6 +57,7 @@ test.motifMatrix<-function(){
                                         #check background string creation from probs
   
   
+  
                                         #check background creation from DNAStringSet
   bg.seqs <- BStringSet(x=c("AGTGTAGATAGTAGATA", "AGATAGATGATATAGA", "AAGATAGATGATATTGATA","GATATAGAGTATGA"))
   dat<-cbind(c(1,2,1,2),c(3,4,5,6))

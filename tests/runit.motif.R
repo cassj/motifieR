@@ -1,12 +1,5 @@
 checkTrue(require(methods))
 
-#load required classes
-source("R/motifMatrix.R")
-source("R/pfm.R")
-source("R/ppm.R")
-source("R/pwm.R")
-source("R/motif.R")
-
 #test the virtual class motifMatrix 
 test.motif<-function(){
   className="motif"
