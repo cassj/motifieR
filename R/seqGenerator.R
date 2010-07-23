@@ -59,15 +59,16 @@ setMethod('length.distribution.params',
 
 # Methods
 
-setMethod("sample",
-          signature=signature(x="seqGenerator", size="numeric"),
-          function(x, size=1, type="B"){
+setMethod("sample.seq",
+          signature=signature(.Object="seqGenerator"),
+          function(.Object, size=1, replace=TRUE, prob=NULL, type="B"){
+
                                         #get lengths with appropriate distribution
-            params <- c(list(n=size), length.distribution.params(x))
-            l <- round(do.call(length.distribution.function(x),(c(length.distribution.params(x), list(n=size)))))
+            params <- c(list(n=size), length.distribution.params(.Object))
+            l <- round(do.call(length.distribution.function(.Object),(c(length.distribution.params(.Object), list(n=size)))))
             
                                         #sample alphabet on the basis of symbol.freqs probs
-            seqs <- sapply(l, function(n){ paste(sample(alphabet(x), size=n, replace=TRUE, prob=symbol.freqs(x)[alphabet(x)]), collapse="") } )
+            seqs <- sapply(l, function(n){ paste(sample(alphabet(.Object), size=n, replace=TRUE, prob=symbol.freqs(.Object)[alphabet(.Object)]), collapse="") } )
             
              switch(type,
               'B' = BStringSet(seqs),

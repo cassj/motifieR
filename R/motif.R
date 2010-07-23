@@ -9,7 +9,7 @@ setClass("motif",
            ppm = "ppmOrNULL",
            pwm = "pwmOrNULL",
            ic = "numericOrNULL",
-           motif.sequences="XStringSetOrNull"
+           motif.sequences="XStringSetOrNull",
            motif.name ="characterOrNULL",
            motif.identifier="characterOrNULL",
            motif.source="characterOrNULL",

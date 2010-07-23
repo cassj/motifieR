@@ -18,10 +18,10 @@ test.seqGenerator<-function(){
   checkEquals(length.distribution.function(this), length.f)
 
   #and see if it can actually generate sequences
-  seqs <- sample(this, size=10)
+  seqs <- sample.seq(this, size=10)
   checkTrue(is(seqs, "XStringSet"))
   checkEquals(length(seqs),10)
-  seqs <- sample(this, size=10, type="DNA")
+  seqs <- sample.seq(this, size=10, type="DNA")
   checkTrue(is(seqs, "DNAStringSet"))
-
+  
 }

@@ -89,3 +89,6 @@ setGeneric("length.distribution.function",
 
 setGeneric("length.distribution.params",
            function(.Object) standardGeneric("length.distribution.params"))
+
+setGeneric("sample.seq",
+           function(.Object, size="numeric",replace="logical", prob="numeric", ...) standardGeneric("sample.seq"))
